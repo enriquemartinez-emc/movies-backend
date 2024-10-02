@@ -14,6 +14,12 @@ public class MoviesController : ControllerBase
         _mediator = mediator;
     }
 
+    /// <summary>
+    /// Get the list of all the Movies
+    /// </summary>
+    /// <returns>List of all movies</returns>
+    /// <remarks>
+    /// </remarks>
     [HttpGet]
     public async Task<ActionResult<List<MovieDto>>> GetMovies()
         => await _mediator.Send(new GetMoviesQuery());
@@ -22,7 +28,29 @@ public class MoviesController : ControllerBase
     public async Task<ActionResult<MovieDto?>> GetMovie(int id)
         => await _mediator.Send(new GetMovieByIdQuery(id));
 
+    /// <summary>
+    /// Creates a Movie.
+    /// </summary>
+    /// <remarks>
+    /// Sample request:
+    /// 
+    ///     POST api/movies
+    ///     {        
+    ///       {
+    ///         "title": "Batman",
+    ///         "director": "Christopher Nolan",
+    ///         "releaseDate": "2024-10-02T05:23:13.642Z",
+    ///         "categoryId": 1
+    ///       }
+    ///     }
+    /// </remarks>
+    /// <returns>A newly created movie</returns>
+    /// <response code="201">Returns the newly created movie</response>
+    /// <response code="400">If the movie is null</response>
     [HttpPost]
+    [ProducesResponseType(201)]
+    [ProducesResponseType(400)]
+    [Produces("application/json")]
     public async Task<ActionResult<MovieDto>> CreateMovie([FromBody] CreateMovieCommand command)
     {
         var movie = await _mediator.Send(command);
