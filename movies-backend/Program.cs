@@ -41,13 +41,14 @@ static void RegisterServices(WebApplicationBuilder builder)
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         c.IncludeXmlComments(xmlPath);
     });
+    builder.Services.AddCors();
 }
 
 static void ConfigureApplication(WebApplication app)
 {
     app.UseSwagger(c => c.RouteTemplate = "swagger/{documentName}/swagger.json");
     app.UseSwaggerUI(x => x.SwaggerEndpoint("/swagger/v1/swagger.json", "Movie API V1"));
-
+    app.UseCors(x => x.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
     app.UseAuthorization();
     app.MapControllers();
 }
